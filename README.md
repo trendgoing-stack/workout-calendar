@@ -16,17 +16,30 @@ npm run lint     # oxlint
 `npm run dev` は `--host` 付きで起動するので、同じ Wi-Fi の iPhone から
 `http://<PCのIPアドレス>:5173` で開けます。
 
+## 公開先
+
+https://trendgoing-stack.github.io/workout-calendar/
+
+`main` に push すると GitHub Actions（`.github/workflows/deploy.yml`）が
+ビルドして GitHub Pages へ自動デプロイします。手作業でのアップロードは不要です。
+
+```bash
+git add -A && git commit -m "変更内容" && git push
+```
+
+サブパス配信（`/workout-calendar/`）で動くよう、`vite.config.ts` の `base` は
+`'./'`（相対パス）にしてあります。manifest・Service Worker のパスもすべて相対です。
+ここを絶対パスに戻すと、GitHub Pages では真っ白な画面になるので注意。
+
 ### iPhone のホーム画面に追加する
 
-1. Safari でアプリを開く
+1. Safari で上記URLを開く
 2. 共有ボタン →「ホーム画面に追加」
 3. 追加したアイコンから起動すると、全画面表示＋オフラインでも起動します
 
 Service Worker は本番ビルド時のみ有効（`src/pwa.ts`）。開発中は登録しません。
 なお **Service Worker は https か localhost でのみ動作する**ため、LAN の IP
-（`http://192.168.x.x:5173`）で開いた場合はオフライン動作しません。実機で
-ホーム画面追加まで試すなら、Vercel / Netlify / Cloudflare Pages などに
-`dist/` をデプロイするのが簡単です。
+（`http://192.168.x.x:5173`）で開いた場合はオフライン動作しません。
 
 ## 画面
 
