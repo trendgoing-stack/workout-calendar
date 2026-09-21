@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #f4f5f7;
+  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP",
+    "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  /* iOS でのスクロールバウンス時に背景が白くならないように */
+  overscroll-behavior-y: none;
+}
+
+/* iOS Safari のズーム防止（入力欄のフォントは 16px 以上） */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* セーフエリア（iPhone のホームインジケータ）対応ユーティリティ */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* 数値入力のスピナーを消す */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}

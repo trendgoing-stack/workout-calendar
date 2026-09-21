@@ -1,0 +1,11 @@
+/** ランダムな ID を生成する（crypto.randomUUID が無い環境へのフォールバック付き） */
+export function createId(): string {
+  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+    return crypto.randomUUID()
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
+}
+
+export function nowIso(): string {
+  return new Date().toISOString()
+}
