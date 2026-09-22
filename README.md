@@ -1,113 +1,42 @@
-# 筋トレ記録カレンダー（PWA）
+# 筋トレ記録カレンダー
 
-トレーニングをカレンダーで記録・振り返るための個人用アプリ。
-React + Vite + TypeScript + Tailwind CSS、データはブラウザの localStorage に保存します（バックエンドなし）。
+筋トレの記録をカレンダーで管理できるWebアプリです。
+鍛えた部位が色分けで表示されるので、「最近どこを鍛えたか」がひと目でわかります。
 
-## 使い方
+**▶ アプリを開く: https://trendgoing-stack.github.io/workout-calendar/**
 
-```bash
-npm install
-npm run dev      # 開発サーバー（http://localhost:5173）
-npm run build    # 本番ビルド（dist/）
-npm run preview  # ビルド結果の確認（http://localhost:4173）
-npm run lint     # oxlint
-```
+登録やログインは不要です。無料で使えます。
 
-`npm run dev` は `--host` 付きで起動するので、同じ Wi-Fi の iPhone から
-`http://<PCのIPアドレス>:5173` で開けます。
+## できること
 
-## 公開先
+- **カレンダー** — トレーニングした日に、鍛えた部位の色のドットが付きます。日付をタップすると、その日の記録を追加・編集できます
+- **記録** — 種目・部位・セットごとの重量と回数・メモを記録できます。一度入力した種目名は次回から候補に表示されます
+- **統計** — 部位ごとのトレーニング頻度（週別・月別）や、種目ごとの重量の推移をグラフで確認できます
+- **ルーティン** — よく行うメニューを保存しておけば、ワンタップでその日の記録として登録できます
+- **設定** — 部位の色や名前の変更、重量の単位（kg / lb）の切り替え、データのバックアップができます
 
-https://trendgoing-stack.github.io/workout-calendar/
+## iPhoneで使う
 
-`main` に push すると GitHub Actions（`.github/workflows/deploy.yml`）が
-ビルドして GitHub Pages へ自動デプロイします。手作業でのアップロードは不要です。
+ホーム画面に追加すると、アプリのように全画面で使えます。一度開けば、電波のない場所でも起動します。
 
-```bash
-git add -A && git commit -m "変更内容" && git push
-```
+1. **Safari** で上のリンクを開く
+2. 画面下の共有ボタン（□に↑のアイコン）をタップ
+3. 「ホーム画面に追加」をタップ
 
-サブパス配信（`/workout-calendar/`）で動くよう、`vite.config.ts` の `base` は
-`'./'`（相対パス）にしてあります。manifest・Service Worker のパスもすべて相対です。
-ここを絶対パスに戻すと、GitHub Pages では真っ白な画面になるので注意。
+> [!IMPORTANT]
+> Safariで開いた場合とホーム画面から開いた場合では、データが**別々に保存**されます。
+> 記録はホーム画面のアイコンから開いて付けるようにしてください。
 
-### iPhone のホーム画面に追加する
+AndroidやPCでも、ChromeやEdgeなどのブラウザで同じように使えます。
 
-1. Safari で上記URLを開く
-2. 共有ボタン →「ホーム画面に追加」
-3. 追加したアイコンから起動すると、全画面表示＋オフラインでも起動します
+## データについて
 
-Service Worker は本番ビルド時のみ有効（`src/pwa.ts`）。開発中は登録しません。
-なお **Service Worker は https か localhost でのみ動作する**ため、LAN の IP
-（`http://192.168.x.x:5173`）で開いた場合はオフライン動作しません。
+- 記録は**お使いの端末の中だけ**に保存されます。サーバーには送信されないので、ほかの人に見られることはありません
+- そのため、**機種変更やブラウザのデータ削除をすると記録は消えます**。設定画面の「エクスポート」で定期的にバックアップを取っておくと安心です
+- 別の端末にデータを移すときは、元の端末でエクスポートしたファイルを、新しい端末の設定画面で「インポート」してください
 
-## 画面
+## はじめて使うときは
 
-| タブ | 内容 |
-| --- | --- |
-| カレンダー | 月表示。記録した日は部位の色ドットを表示。日付をタップしてその日の記録を追加・編集 |
-| 統計 | 週別／月別の部位ごとの頻度（積み上げ棒グラフ）、種目ごとの推移（折れ線）、直近の記録一覧 |
-| ルーティン | よく行う種目の組み合わせをテンプレート化し、日付を選んで一括登録 |
-| 設定 | 部位タグの色・名前・並び順、単位、週の開始曜日、JSON エクスポート／インポート、全削除 |
+設定画面の「サンプルデータを入れて試す」を押すと、見本の記録が入ります。
+操作感を確かめたあとは、「全データを削除」で消せます。
 
-## ディレクトリ構成
-
-```
-src/
-├── types/index.ts          # 保存スキーマの型定義（localStorage の中身そのもの）
-├── lib/
-│   ├── constants.ts        # localStorage キー、既定の部位タグ、スキーマバージョン
-│   ├── storage.ts          # localStorage の読み書き（保存先を差し替えるならここ）
-│   ├── repository.ts       # データ操作の窓口（すべて Promise。Supabase 移行の接続点）
-│   ├── normalize.ts        # 外部データの検証・補完、サンプルデータ生成
-│   ├── selectors.ts        # 集計・派生データ（純粋関数）
-│   ├── factories.ts        # 空データの生成、ルーティン⇔記録の変換
-│   ├── date.ts             # 日付ユーティリティ（カレンダーのマス目生成など）
-│   ├── colors.ts           # 部位カラーのユーティリティ
-│   └── backup.ts           # JSON エクスポート／インポート
-├── store/
-│   ├── context.ts          # Context の定義
-│   ├── AppContext.tsx      # Provider（repository を呼んで state を更新）
-│   └── useApp.ts           # useApp() フック
-├── components/             # カレンダー、記録エディタ、グラフ、シートなど
-└── pages/                  # 4つのタブに対応する画面
-```
-
-## データ設計
-
-1レコード = 1トレーニングセッション（`WorkoutSession`）。
-
-```ts
-WorkoutSession {
-  id: string
-  date: 'YYYY-MM-DD'
-  exercises: Array<{
-    id: string
-    name: string              // 種目名（自由入力・過去の入力をサジェスト）
-    muscleGroupIds: string[]  // 部位タグ（複数可）
-    sets: Array<{ id: string; weight: number | null; reps: number | null }>
-    memo: string
-  }>
-  memo: string
-  createdAt / updatedAt: ISO 8601
-}
-```
-
-localStorage には `workout-calendar:data` キーで
-`{ version, sessions[], routines[], settings }` をまとめて保存します。
-`version` はスキーマ変更時のマイグレーション用（`SCHEMA_VERSION`）。
-
-同じ日に複数セッションを登録でき、その日の部位タグは含まれる種目の部位の和集合として表示されます。
-
-## バックエンドへの移行
-
-UI は `lib/repository.ts` の `WorkoutRepository` インターフェースだけに依存しています。
-Supabase などに移す場合は、同じインターフェースを実装したクラスを作り、
-末尾の `export const repository` を差し替えれば UI 側の変更は不要です
-（メソッドはすべて Promise を返す設計にしてあります）。
-
-## 注意
-
-- データはこの端末のブラウザにのみ保存されます。機種変更やブラウザのデータ削除で消えるので、
-  設定画面から定期的に JSON をエクスポートしてください。
-- iOS では、長期間アプリを開かないと Safari がストレージを消す場合があります（同上）。
