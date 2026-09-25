@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { AppProvider } from './store/AppContext'
 import { useApp } from './store/useApp'
 import { TabBar } from './components/TabBar'
+import { UpdateBanner } from './components/UpdateBanner'
 import type { TabKey } from './components/TabBar'
 import { CalendarPage } from './pages/CalendarPage'
 import { StatsPage } from './pages/StatsPage'
@@ -22,6 +23,7 @@ function Shell() {
 
   return (
     <div className="min-h-dvh pb-20">
+      <UpdateBanner />
       <main className="mx-auto max-w-lg">
         {tab === 'calendar' && <CalendarPage />}
         {tab === 'stats' && <StatsPage />}

@@ -261,7 +261,10 @@ export function SettingsPage() {
         <h2 className="mb-2 text-sm font-semibold text-slate-700">ホーム画面に追加</h2>
         iPhone の Safari でこのページを開き、共有ボタン →「ホーム画面に追加」を選ぶと、
         アプリのように全画面で使えます（オフラインでも起動します）。
+        新しいバージョンがあるときは画面上部にお知らせが出るので、タップして更新してください。
       </section>
+
+      <p className="text-center text-xs text-slate-400">バージョン {__APP_VERSION__}</p>
 
       <ConfirmDialog
         open={pendingImport !== null}
